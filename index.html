@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>密码学数学基础挑战</title>
+    <style>
+        /* 动态3D密码盘 */
+        .crypto-board {
+            background: radial-gradient(circle at 50% 30%, #2c3e50 20%, #000 80%);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.3);
+            transform: perspective(1000px) rotateX(10deg);
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        /* 题目容器 */
+        .quiz-container {
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        /* 选项按钮样式 */
+        .option {
+            background: rgba(44, 62, 80, 0.9);
+            border: 1px solid #3498db;
+            color: #ecf0f1;
+            padding: 12px 24px;
+            margin: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        /* 选项悬停效果 */
+        .option:hover {
+            background: rgba(52, 152, 219, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* 正确选项持续发光 */
+        .option[data-answer="A"] {
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 15px #3498db;
+        }
+
+        /* 选中状态 */
+        .selected {
+            transform: scale(1.15) !important;
+            box-shadow: 0 0 20px #e74c3c !important;
+        }
+
+        /* 选项A选中时的特殊样式 */
+        .option[data-answer="A"].selected {
+            border: 2px solid #2ecc71 !important;
+            box-shadow: 0 0 20px #2ecc71 !important;
+        }
+
+        /* 其他选项选中样式保持不变 */
+        .option:not([data-answer="A"]).selected {
+            border: 2px solid #e74c3c !important;
+        }
+
+        /* 反馈信息样式 */
+        #feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .success-text {
+            color: #2ecc71;
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+        }
+
+        .error-text {
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="crypto-board">
+        <div class="quiz-container">
+            <h2>密码学数学基础挑战</h2>
+            <p>你认为设计密码需要用到哪种数学知识？</p>
+            
+            <div class="options">
+                <button class="option" data-answer="A">A. 代数式</button>
+                <button class="option" data-answer="B">B. 几何图形</button>
+                <button class="option" data-answer="C">C. 统计概率</button>
+            </div>
+
+            <div id="feedback"></div>
+        </div>
+    </div>
+
+    <audio id="correctSound" src="correct.mp3"></audio>
+    <audio id="errorSound" src="error.mp3"></audio>
+
+    <script>
+        document.querySelectorAll('.option').forEach(button => {
+            button.addEventListener('click', function() {
+                // 清除其他选项状态
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                const feedback = document.getElementById('feedback');
+                const correctSound = document.getElementById('correctSound');
+                const errorSound = document.getElementById('errorSound');
+
+                if (this.dataset.answer === 'A') {
+                    this.classList.add('selected');
+                    correctSound.play();
+                    feedback.innerHTML = `
+                        <p class="success-text">✅ 正确！代数式是密码设计的核心！<br>
+                        <small>（如模运算、多项式计算等代数方法）</small></p>
+                    `;
+                } else {
+                    this.classList.add('selected');
+                    errorSound.play();
+                    feedback.innerHTML = `
+                        <p class="error-text">❌ 再想想，密码设计主要依赖代数知识！<br>
+                        <small>（虽然${this.textContent.replace('B. ','').replace('C. ','')}也有应用，但代数才是基础）</small></p>
+                    `;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
